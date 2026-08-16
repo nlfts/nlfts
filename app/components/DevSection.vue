@@ -2,6 +2,10 @@
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
+if (process.client) {
+  gsap.registerPlugin(ScrollTrigger)
+}
+
 // Dummy Data Kontributor
 const contributors = [
   { name: 'Kin You', avatar: 'https://avatars.githubusercontent.com/u/228851591?v=4' },
@@ -29,8 +33,6 @@ const contributors = [
   { name: 'ferrr', avatar: 'https://avatars.githubusercontent.com/u/234127916?s=130&v=4' },
   { name: 'Naffez', avatar: 'https://avatars.githubusercontent.com/u/182593937?v=4' }
 ]
-
-gsap.registerPlugin(ScrollTrigger)
 
 onMounted(() => {
   gsap.fromTo('.contributor-item', 

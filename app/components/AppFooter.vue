@@ -2,13 +2,19 @@
 import gsap from 'gsap'
 
 
+// Routes yang ditangani oleh Nitro server route (bukan halaman Vue/SPA)
+// Harus menggunakan <a> biasa agar tidak di-prefetch oleh Vue Router
+const SERVER_ROUTES = new Set(['/partner', '/discord', '/wa', '/instagram', '/tiktok', '/linkedin', '/x', '/bsky', '/community', '/sponsor', '/marketplace', '/huggingface', '/kontak'])
+
+const isServerRoute = (path: string) => SERVER_ROUTES.has(path)
+
 const columns = [
   {
     label: 'Product',
     children: [
       { label: 'Education', to: 'https://edu.nlfts.dev' },
-      { label: 'FTs DevTools', to : 'https://github.com/Vuxilabs/fts-devtools'},
-      { label: 'Travellings.id', to : 'https://tv.nlfts.dev' },
+      { label: 'FTs DevTools', to: 'https://github.com/Vuxilabs/fts-devtools' },
+      { label: 'Travellings.id', to: 'https://tv.nlfts.dev' },
       { label: 'Lions Pos', to: 'https://github.com/nlfts/Lions-Pos' }
     ]
   },
@@ -26,13 +32,13 @@ const columns = [
     children: [
       { label: 'Tentang', to: '/about' },
       { label: 'Karir', to: '/karir' },
-      { label: 'terhubung', to: '/terhubung' },
+      { label: 'Terhubung', to: '/terhubung' },
       { label: 'DevLovers', to: '/members' },
       { label: 'Blog', to: '/blog' },
-      { label: 'Sponsors', to: 'https://github.com/sponsors/NLFTs'},
+      { label: 'Sponsors', to: 'https://github.com/sponsors/NLFTs' },
       { label: 'Kontak', to: '/contact' },
-      { label: 'Mitra', to: '/partners'},
-      { label: 'Donasi', to: '/donasi'},
+      { label: 'Mitra', to: '/partner' },
+      { label: 'Donasi', to: '/donasi' },
       { label: 'Meet', to: 'https://cal.com/nlfts' }
     ]
   },
@@ -180,7 +186,18 @@ const onSocialLeave = (e: MouseEvent) => {
             </h3>
             <ul class="space-y-3">
               <li v-for="link in col.children" :key="link.label">
+                <!-- Gunakan <a> untuk external URL dan server routes (agar tidak di-prefetch Vue Router) -->
+                <a
+                  v-if="link.to.startsWith('http') || isServerRoute(link.to)"
+                  :href="link.to"
+                  :target="link.to.startsWith('http') ? '_blank' : undefined"
+                  :rel="link.to.startsWith('http') ? 'noopener noreferrer' : undefined"
+                  class="text-sm text-gray-500 hover:text-primary-500 dark:text-gray-400 transition-colors duration-200"
+                >
+                  {{ link.label }}
+                </a>
                 <NuxtLink
+                  v-else
                   :to="link.to"
                   class="text-sm text-gray-500 hover:text-primary-500 dark:text-gray-400 transition-colors duration-200"
                 >
@@ -195,16 +212,17 @@ const onSocialLeave = (e: MouseEvent) => {
       <!-- SOCIALS BOTTOM BAR -->
       <div class="mt-24 flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-8">
         <div class="flex items-center gap-6">
-          <NuxtLink
+          <a
             v-for="social in socialLinks"
             :key="social.label"
-            :to="social.to"
+            :href="social.to"
             target="_blank"
+            rel="noopener noreferrer"
             :aria-label="social.label"
             class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
             <UIcon :name="social.icon" class="w-5 h-5" />
-          </NuxtLink>
+          </a>
         </div>
 
         <div class="flex gap-6 text-[11px] font-medium text-gray-400">

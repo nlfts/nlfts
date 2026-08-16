@@ -8,18 +8,21 @@ if (process.client) {
 
 const sectionRef = ref<HTMLElement | null>(null)
 
-const { data: posts } = await useAsyncData('latest-posts', () => 
+const { data: posts } = await useAsyncData('latest-posts', () =>
   queryCollection('posts')
     .order('date', 'DESC')
     .limit(3)
     .all()
 )
 
+// ctx harus dideklarasikan di scope setup() agar onUnmounted bisa mengaksesnya
+let ctx: gsap.Context | null = null
+
 onMounted(async () => {
   await nextTick()
   if (!sectionRef.value) return
 
-  const ctx = gsap.context(() => {
+  ctx = gsap.context(() => {
     gsap.from(".blog-reveal", {
       scrollTrigger: {
         trigger: sectionRef.value,
@@ -33,8 +36,11 @@ onMounted(async () => {
       ease: "power2.out"
     })
   }, sectionRef.value)
+})
 
-  onUnmounted(() => ctx.revert())
+// onUnmounted harus di scope setup() langsung, bukan di dalam onMounted
+onUnmounted(() => {
+  ctx?.revert()
 })
 </script>
 
