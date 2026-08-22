@@ -174,7 +174,7 @@ const onSocialLeave = (e: MouseEvent) => {
           </div>
 
           <div class="mt-8 lg:mt-0 text-[10px] uppercase tracking-widest text-gray-400">
-            &copy; {{ new Date().getFullYear() }} NLFTs. All rights reserved.
+            &copy; 2024 - {{ new Date().getFullYear() }} NLFTs. All rights reserved.
           </div>
         </div>
 

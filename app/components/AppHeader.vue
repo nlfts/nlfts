@@ -39,10 +39,14 @@ const getMenuKey = (menu: string) => {
   return menu.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')
 }
 const navItems = [
-  // { label: 'Product', key: 'product' },
-  // { label: 'Paket Harga', key: 'paket-harga' },
-  { label: 'Resources', key: 'resources' },
-  { label: 'Kegiatan & Acara', key: 'event' }
+  { label: 'Explore', key: 'resources' },
+  { label: 'Events', key: 'event' }
+]
+
+const primaryLinks = [
+  { label: 'Education', to: 'https://edu.nlfts.dev', badge: 'New' },
+  { label: 'Jobs', to: '/karir' },
+  { label: 'Market', to: '/jasa' }
 ]
 // ── Desktop Navigation Logic ────────────────────────
 const openMenu = (menu: string) => {
@@ -194,25 +198,14 @@ const Resources = [
     ref="headerEl"
     class="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-black/95 backdrop-blur-md transition-colors duration-300"
   >
-    <!-- Vercel Minimalist Top Announcement Bar -->
-    <div class="w-full bg-zinc-950 text-zinc-200 py-2 px-5 sm:px-6 flex items-center justify-between text-[11px] font-normal tracking-tight border-b border-zinc-800">
-       <div class="flex items-center gap-2 mx-auto sm:mx-0">
-          <span class="inline-flex items-center justify-center bg-zinc-800 text-[9px] font-bold px-1.5 py-0.5 rounded text-white tracking-widest">FREE</span>
-          <span class="text-zinc-300">Gabung Komunitas gratis via WhatsApp.</span>
-       </div>
-       <NuxtLink to="https://nlfts.dev/wa" target="_blank" class="hidden sm:flex items-center gap-1 font-medium hover:text-white transition-colors">
-          Mari Terhubung <UIcon name="i-lucide-arrow-right" class="w-3.5 h-3.5" />
-       </NuxtLink>
-    </div>
-
     <!-- Main Navigation Bar -->
     <div class="max-w-[1600px] mx-auto px-5 sm:px-6">
-      <div class="flex items-center justify-between h-14">
+      <div class="flex items-center gap-7 min-h-[72px]">
         <NuxtLink to="/" class="nav-enter shrink-0 flex items-center">
           <AppLogo class="h-6 w-auto" />
         </NuxtLink>
         <nav
-          class="hidden lg:flex items-center justify-end gap-0.5 relative py-3 w-full"
+          class="hidden lg:flex items-center gap-0.5 relative shrink-0"
           @mouseenter="cancelClose"
           @mouseleave="() => { scheduleClose(); resetHover(); }"
         >
@@ -242,25 +235,35 @@ const Resources = [
               :class="activeMenu === item.key ? 'rotate-180 opacity-80' : ''"
             />
           </button>
+
+          <NuxtLink
+            v-for="item in primaryLinks"
+            :key="item.label"
+            :to="item.to"
+            class="nav-enter relative flex items-center gap-1 px-3 h-8 rounded-md text-[13px] font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors duration-150"
+          >
+            {{ item.label }}
+            <span v-if="item.badge" class="rounded bg-zinc-800 px-1 py-0.5 text-[9px] font-bold leading-none text-white">{{ item.badge }}</span>
+          </NuxtLink>
         </nav>
 
-        <!-- Right Side Controls -->
-        <div class="flex items-center gap-3 nav-enter">
-          <!-- Vercel Search Box Button -->
+        <!-- Search and account controls -->
+        <div class="flex min-w-0 flex-1 items-center justify-end gap-4 nav-enter">
           <button
-            class="hidden sm:flex items-center justify-between w-44 px-2.5 py-1 rounded-md bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-350 dark:hover:border-zinc-700 transition-all group"
+            class="hidden md:flex h-[52px] w-full max-w-[430px] items-center gap-3 rounded-[11px] border border-transparent bg-zinc-100 px-5 text-left transition-colors group hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800"
             @click="toggleSearch"
           >
-            <div class="flex items-center gap-1.5">
-              <UIcon name="i-lucide-search" class="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-500 transition-colors" />
-              <span class="text-xs text-zinc-400 group-hover:text-zinc-500 transition-colors">Cari...</span>
-            </div>
-            <div class="flex items-center text-[10px] font-mono text-zinc-400 bg-white dark:bg-black px-1.5 py-0.5 rounded border border-zinc-200 dark:border-zinc-800">
-              <span>⌘K</span>
+            <div class="flex items-center gap-2.5">
+              <UIcon name="i-lucide-search" class="h-4 w-4 text-zinc-500 transition-colors group-hover:text-zinc-700 dark:text-zinc-400 dark:group-hover:text-zinc-200" />
+              <span class="text-sm text-zinc-500 transition-colors group-hover:text-zinc-700 dark:text-zinc-400 dark:group-hover:text-zinc-200">Search Repository</span>
             </div>
           </button>
 
-          <UColorModeButton size="sm" class="text-zinc-500 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-50 bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-900 border-none shadow-none" />
+          <div class="hidden xl:flex items-center gap-5 whitespace-nowrap">
+            <NuxtLink to="/terhubung" class="inline-flex h-[52px] items-center rounded-[11px] border border-zinc-900 px-6 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-900 dark:border-zinc-300 dark:text-zinc-100 dark:hover:bg-white dark:hover:text-zinc-900">Bergabung</NuxtLink>
+          </div>
+
+          <UColorModeButton size="sm" class="hidden lg:flex text-zinc-500 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-50 bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-900 border-none shadow-none" />
           
           <button
             class="lg:hidden p-1.5 rounded-md text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"

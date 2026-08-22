@@ -31,7 +31,7 @@ useHead(() => ({
     { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
     { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
     // Google Fonts — non-render-blocking (media=print swap trick)
-    { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap', media: 'print', onload: "this.media='all'" },
+    { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400&display=swap', media: 'print', onload: "this.media='all'" },
     // RSS feeds
     { rel: 'alternate', type: 'application/rss+xml', title: 'NLFTs Blog RSS', href: 'https://NLFTs.dev/rss.xml' },
     { rel: 'alternate', type: 'application/atom+xml', title: 'NLFTs Blog Atom', href: 'https://NLFTs.dev/atom.xml' },

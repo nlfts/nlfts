@@ -392,9 +392,9 @@ const handleKey = (e: KeyboardEvent) => {
 </script>
 
 <style scoped>
-/* Poppins dari nuxt.config atau layout utama — fallback ke system font */
+/* Keep this page aligned with the global typography token. */
 .font-sans {
-  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter Tight', sans-serif;
 }
 
 /* Pastikan kolom masonry tidak ada gap di sisi dalam */

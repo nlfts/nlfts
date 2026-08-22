@@ -1,14 +1,36 @@
 <template>
   <div class="min-h-screen bg-white dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
-    
-    <header class="px-6 py-16 md:py-24 lg:py-32 text-center max-w-4xl mx-auto space-y-6 md:space-y-8">
-      <h1 class="text-4xl md:text-5xl lg:text-7xl font-light tracking-tight text-zinc-950 dark:text-white leading-tight">
-        Mari membangun ekosistem digital bersama.
-      </h1>
-      <p class="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 font-light">
-        Konektivitas adalah fondasi dari inovasi. Pilih cara terbaik untuk terhubung dengan komunitas dan tim pengembang kami.
-      </p>
-    </header>
+      <header
+    ref="headerRef"
+    class="relative px-6 py-16 md:py-24 lg:py-32 text-center max-w-4xl mx-auto space-y-6 md:space-y-8 overflow-hidden"
+    @mousemove="onMouseMove"
+  >
+    <!-- Glow yang mengikuti kursor -->
+    <div
+      ref="glowRef"
+      class="pointer-events-none absolute w-[500px] h-[500px] rounded-full bg-gradient-to-br from-indigo-400/20 via-fuchsia-300/10 to-transparent blur-3xl -z-10"
+      style="top: -250px; left: -250px;"
+    />
+
+    <!-- Garis aksen kecil yang menggambar dari 0 -> full -->
+    <div class="flex justify-center">
+      <span ref="lineRef" class="block h-[2px] w-0 bg-zinc-950 dark:bg-white origin-left" />
+    </div>
+
+    <h1
+      ref="titleRef"
+      class="text-4xl md:text-5xl lg:text-7xl font-light tracking-tight text-zinc-950 dark:text-white leading-tight"
+    >
+      Mari membangun ekosistem digital bersama.
+    </h1>
+
+    <p
+      ref="subRef"
+      class="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 font-light opacity-0"
+    >
+      Konektivitas adalah fondasi dari inovasi. Pilih cara terbaik untuk terhubung dengan komunitas dan tim pengembang kami.
+    </p>
+  </header>
 
     <!-- Section Discord -->
   <section class="bg-zinc-50 dark:bg-[#09090b] py-16 md:py-24 lg:py-32 text-zinc-900 dark:text-white transition-colors duration-300">
@@ -831,7 +853,71 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import { gsap } from 'gsap'
+import { SplitText } from 'gsap/SplitText'
+
+gsap.registerPlugin(SplitText)
+
+const headerRef = ref<HTMLElement | null>(null)
+const glowRef = ref<HTMLElement | null>(null)
+const lineRef = ref<HTMLElement | null>(null)
+const titleRef = ref<HTMLElement | null>(null)
+const subRef = ref<HTMLElement | null>(null)
+
+function onMouseMove(e: MouseEvent) {
+  if (!headerRef.value || !glowRef.value) return
+
+  const rect = headerRef.value.getBoundingClientRect()
+  gsap.to(glowRef.value, {
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top,
+    duration: 0.8,
+    ease: 'power3.out'
+  })
+}
+
+onMounted(() => {
+  // Split judul jadi kata per kata (biar tetap rapi wrapping-nya)
+  const split = SplitText.create(titleRef.value, {
+    type: 'words,lines',
+    mask: 'lines', // otomatis kasih overflow-hidden per baris -> efek "naik dari bawah"
+    linesClass: 'split-line'
+  })
+
+  const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
+
+  tl.fromTo(
+    lineRef.value,
+    { width: 0 },
+    { width: 64, duration: 0.6, ease: 'power2.inOut' }
+  )
+    .from(
+      split.words,
+      {
+        yPercent: 120,
+        opacity: 0,
+        filter: 'blur(8px)',
+        duration: 1.1,
+        stagger: 0.06
+      },
+      '-=0.2'
+    )
+    .to(
+      subRef.value,
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8
+      },
+      '-=0.5'
+    )
+    .from(
+      subRef.value,
+      { y: 12 },
+      '<'
+    )
+})
 
 useSeoMeta({
   title: 'Terhubung dengan NLFTs — Komunitas Developer Indonesia',
